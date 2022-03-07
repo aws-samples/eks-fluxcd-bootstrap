@@ -1,9 +1,9 @@
 kind: ClusterConfig
 apiVersion: eksctl.io/v1alpha5
 metadata:
-  name: sandbox
+  name: demo-DEV
   version: "1.21"
-  region: us-east-1
+  region: eu-west-2
 availabilityZones:
   - us-east-1a
   - us-east-1b
@@ -16,25 +16,25 @@ iam:
         namespace: kube-system
       wellKnownPolicies:
         autoScaler: true
-      roleName: sandbox-autoscaler-role
+      roleName: demo-DEV-autoscaler-role
     - metadata:
         name: aws-load-balancer-controller
         namespace: aws-system
       wellKnownPolicies:
         awsLoadBalancerController: true
-      roleName: sandbox-lb-controller-role
+      roleName: demo-DEV-lb-controller-role
     - metadata:
         name: aws-cloudwatch-agent
         namespace: aws-system
       attachPolicyARNs:
         - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
-      roleName: sandbox-cloudwatch-metrics
+      roleName: demo-DEV-cloudwatch-metrics
     - metadata:
         name: aws-fluent-bit
         namespace: aws-system
       attachPolicyARNs:
         - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
-      roleName: sandbox-fluent-bit
+      roleName: demo-DEV-fluent-bit
 addons:
   - name: vpc-cni
     version: latest
@@ -43,16 +43,32 @@ addons:
   - name: coredns
     version: latest
 gitops:
-  flux:
+  flux-demo-DEV:
     gitProvider: github
     flags:
-      owner: <YOUR GH USERNAME>
+      owner: delivery-k8s-maksystem
       repository: eks-fluxcd-bootstrap
-      branch: demo
-      path: ./clusters/sandbox/
-      namespace: flux-system
+      branch: demo-DEV
+      path: ./clusters/demo-DEV/
+      namespace: flux-system-demo-DEV
+  flux-demo-VAL:
+    gitProvider: github
+    flags:
+      owner: delivery-k8s-maksystem
+      repository: eks-fluxcd-bootstrap
+      branch: demo-VAL
+      path: ./clusters/demo-VAL/
+      namespace: flux-system-demo-VAL
+  flux-demo-PROD:
+    gitProvider: github
+    flags:
+      owner: delivery-k8s-maksystem
+      repository: eks-fluxcd-bootstrap
+      branch: demo-PROD
+      path: ./clusters/demo-PROD/
+      namespace: flux-system-demo-PROD
 managedNodeGroups:
-  - name: sandbox-amd64-workers
+  - name: demo-DEV-amd64-workers
     instanceType: m5.large
     desiredCapacity: 3
     minSize: 2
