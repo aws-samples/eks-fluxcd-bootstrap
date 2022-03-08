@@ -46,7 +46,7 @@ gitops:
   flux:
     gitProvider: github
     flags:
-      owner: <YOUR GH USERNAME>
+      owner: delivery-k8s-maksystem
       repository: eks-fluxcd-bootstrap
       branch: demo
       path: ./clusters/sandbox/
