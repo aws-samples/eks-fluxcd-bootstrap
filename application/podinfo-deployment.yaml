@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: podinfo
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ./kustomize
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: podinfo
+
+  patchesJson6902:
+  - target:
+      version: v1
+      kind: Service
+      name: podinfo
+    patch:
+    - op: add
+      path: /spec/type
+      value: LoadBalancer
